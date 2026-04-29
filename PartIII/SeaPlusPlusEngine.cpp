@@ -6,3 +6,7 @@ std::string SeaPlusPlusEngine::evaluate(SeaCreature* creature) {
     else
         return invertebrateChecker.check(creature);
 }
+
+std::string SeaPlusPlusEngine::evaluateBag(const Bag& bag) {
+    return bagChecker.check(bag);
+}
