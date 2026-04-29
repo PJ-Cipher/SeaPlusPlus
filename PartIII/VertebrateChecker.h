@@ -7,7 +7,9 @@
 class VertebrateChecker : public SeaChecker {
 private:
     std::map<std::string, Rule> rules;
+
 public:
-    VertebrateChecker();
+    VertebrateChecker(std::map<std::string, Rule> r) : rules(r) {}
+
     std::string check(SeaCreature* creature) override;
 };

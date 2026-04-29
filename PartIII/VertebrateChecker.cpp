@@ -2,19 +2,6 @@
 #include <sstream>
 #include <cctype>
 
-VertebrateChecker::VertebrateChecker() {
-    rules["snapper"]  = { 30.0, 10 };
-    rules["flathead"] = { 27.0, 10 };
-    rules["whiting"]  = { 27.0, 20 };
-    rules["bream"]    = { 25.0, 10 };
-    rules["luderick"] = { 27.0, 20 };
-    rules["tailor"]   = { 30.0, 20 };
-    rules["mulloway"] = { 45.0,  2 };
-    rules["kingfish"] = { 65.0,  5 };
-    rules["flounder"] = { 25.0, 20 };
-    rules["tuna"]     = { 45.0,  3 };
-}
-
 std::string VertebrateChecker::check(SeaCreature* creature) {
     if (creature->isCarryingEggs())
         return "THROW BACK - Carrying eggs. Release it immediately!";
