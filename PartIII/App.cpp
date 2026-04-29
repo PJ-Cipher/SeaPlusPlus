@@ -1,16 +1,15 @@
 #include "App.h"
 #include "SeaPlusPlusEngine.h"
 #include "CreatorHelper.h"
+#include "Bag.h"
 #include <iostream>
 #include <string>
 #include <cctype>
 
-// Check size is a sensible positive number
 bool App::isValidSize(double size) {
-    return size > 0 && size < 500;  // no fish is 500cm...
+    return size > 0 && size < 500;
 }
 
-// Check name only contains letters (no numbers or symbols)
 bool App::isValidName(const std::string& name) {
     for (char c : name) {
         if (!isalpha(c)) return false;
@@ -24,19 +23,20 @@ void App::run() {
     std::cout << "    NSW Fishing Regulation Checker\n";
     std::cout << "=========================================\n";
 
-    // --- Greet the angler ---
+    // Greet the angler
     std::string anglerName;
     std::cout << "\nBefore we start, what is your name? ";
     std::cin >> anglerName;
-
-    Angler angler(anglerName);  // Create the Angler object
+    Angler angler(anglerName);
     std::cout << "Welcome, " << angler.getName() << "!\n";
 
-    char again = 'y';
+    // The angler's bag for this session
+    Bag bag;
 
+    char again = 'y';
     while (again == 'y' || again == 'Y') {
 
-        // --- Get species name with validation ---
+        // Get species name with validation
         std::string name;
         bool validName = false;
         while (!validName) {
@@ -45,11 +45,11 @@ void App::run() {
             if (isValidName(name)) {
                 validName = true;
             } else {
-                std::cout << "  Invalid name. Please use letters only.\n";
+                std::cout << "  Invalid name. Letters only please.\n";
             }
         }
 
-        // --- Get size with validation ---
+        // Get size with validation
         double size = 0;
         bool validSize = false;
         while (!validSize) {
@@ -58,7 +58,7 @@ void App::run() {
                 if (isValidSize(size)) {
                     validSize = true;
                 } else {
-                    std::cout << "  Invalid size. Must be between 0 and 500 cm.\n";
+                    std::cout << "  Invalid size. Must be between 0 and 500.\n";
                 }
             } else {
                 std::cout << "  Please enter a number.\n";
@@ -67,24 +67,42 @@ void App::run() {
             }
         }
 
-        // --- Get eggs status ---
+        // Get eggs status
         char eggsInput;
         std::cout << "Is it carrying eggs? (y/n): ";
         std::cin >> eggsInput;
         bool hasEggs = (eggsInput == 'y' || eggsInput == 'Y');
 
-        // --- Factory Method creates the right type of creature ---
+        // Create the creature using Factory Method
         auto creature = buildCreature(name, size, hasEggs);
         std::cout << "\n[Detected as: " << creature->getType() << "]\n";
 
-        // --- Singleton Mediator evaluates it ---
+        // Check individual creature via engine
         std::string verdict = SeaPlusPlusEngine::instance().evaluate(creature.get());
         std::cout << "Verdict: " << verdict << "\n";
+
+        // If legal, offer to add to bag
+        if (verdict.find("KEEP") != std::string::npos) {
+            char addToBag;
+            std::cout << "Add to your bag? (y/n): ";
+            std::cin >> addToBag;
+            if (addToBag == 'y' || addToBag == 'Y') {
+                bag.addCatch(std::move(creature));
+                std::cout << "Added! Bag now has "
+                          << bag.getCount() << " catch(es).\n";
+            }
+        }
 
         std::cout << "\nCheck another catch? (y/n): ";
         std::cin >> again;
     }
 
-    std::cout << "\nThanks for fishing with Sea++, "
+    // Show the bag summary
+    bag.display();
+
+    // Check the whole bag against limits
+    std::cout << SeaPlusPlusEngine::instance().evaluateBag(bag) << "\n";
+
+    std::cout << "Thanks for fishing with Sea++, "
               << angler.getName() << "! Tight lines!\n";
 }
