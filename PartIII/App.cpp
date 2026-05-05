@@ -20,7 +20,7 @@ bool App::isValidName(const std::string& name) {
 void App::run() {
     std::cout << "=========================================\n";
     std::cout << "          Welcome to Sea++\n";
-    std::cout << "    NSW Fishing Regulation Checker by PJ\n";
+    std::cout << "  NSW Fishing Regulation Checker by PJ\n";
     std::cout << "=========================================\n";
 
     // Greet the angler
