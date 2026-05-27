@@ -1,6 +1,5 @@
 
 # Sea++ 🐟
-### CSE5008 Programming Assignment 2
 **NSW Fishing Regulation Checker — Command Line Application**
 
 ---
